@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769107437863",
+    "project_id": "si22-cae1a",
+    "storage_bucket": "si22-cae1a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769107437863:android:31bebe8aa74c61a8a42102",
+        "android_client_info": {
+          "package_name": "com.klaxxx.si2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7Pr7eT0G-qAI7ymuSB1crRMpqVrLqD1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
