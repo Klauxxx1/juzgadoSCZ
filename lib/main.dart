@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:si2/screens/auth/home_screen.dart';
 import 'package:si2/screens/auth/login_screen.dart';
 import 'package:si2/screens/auth/register_screen.dart';
+import 'package:si2/screens/modules/expediente/expediente_screem.dart';
+import 'package:si2/screens/modules/usuario/usuario_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -45,6 +47,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/home': (context) => HomeScreen(),
+        '/usuario': (context) => const UserInfoScreen(),
+        '/expedientes': (context) => ExpedienteListScreen(),
       },
     );
   }

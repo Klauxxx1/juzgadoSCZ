@@ -59,6 +59,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushNamedAndRemoveUntil(
+                  // ignore: use_build_context_synchronously
                   context,
                   '/login',
                   (route) => false,
@@ -81,7 +82,8 @@ class MainDrawer extends StatelessWidget {
       leading: Icon(icon, color: const Color(0xFFB71C1C)),
       title: Text(title),
       onTap: () {
-        Navigator.pushReplacementNamed(context, routeName);
+        Navigator.pop(context); // cerrar el Drawer primero
+        Navigator.pushNamed(context, routeName); // navegar sin reemplazar
       },
     );
   }

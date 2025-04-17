@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  table_calendar: ^3.0.9
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -55,8 +56,8 @@ dev_dependencies:
 fflutter:
   uses-material-design: true
 
-  # assets:
-  #   - assets/images/login1.jpg
+  assets:
+    - assets/images/che1.jpg
   #   - assets/images/login2.jpg
   #   - assets/images/login3.jpg
   #   - assets/images/login4.jpg

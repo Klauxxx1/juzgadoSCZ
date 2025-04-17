@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -89,13 +87,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
               ),
-              SizedBox(height: 10),
-              TextButton(
-                child: Text('¿No tienes cuenta? Regístrate aquí'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/register');
-                },
-              ),
+              //SizedBox(height: 10),
+              //TextButton(
+              // child: Text('¿No tienes cuenta? Regístrate aquí'),
+              //onPressed: () {
+              //  Navigator.pushNamed(context, '/register');
+              //},
+              // ),
             ],
           ),
         ),
