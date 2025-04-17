@@ -20,7 +20,7 @@ class MainDrawer extends StatelessWidget {
                   CircleAvatar(radius: 30, backgroundColor: Colors.white),
                   SizedBox(height: 10),
                   Text(
-                    'Smart Cart Judicial',
+                    'Seguimiento Documental Judicial',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ],
