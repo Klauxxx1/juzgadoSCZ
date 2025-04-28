@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:si2/providers/auth_provider.dart';
-import 'package:si2/screens/home_screen.dart';
-import 'package:si2/screens/login_screen.dart';
-import 'package:si2/screens/register_screen.dart';
+import 'package:si2/screens/home/home_screen.dart';
+import 'package:si2/screens/auth/login_screen.dart';
+import 'package:si2/screens/auth/register_screen.dart';
 import 'package:si2/services/auth_checker.dart';
 
 void main() async {

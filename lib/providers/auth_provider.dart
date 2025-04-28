@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:si2/services/api_service.dart';
+import 'package:si2/models/user_model.dart';
 
 class AuthProvider with ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -8,9 +9,10 @@ class AuthProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   Map<String, dynamic>? _userData;
+  User? _user;
+  User? get user => _user;
 
   // Getters
-  bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
   String? get error => _error;
   Map<String, dynamic>? get userData => _userData;
@@ -29,9 +31,14 @@ class AuthProvider with ChangeNotifier {
       _isAuthenticated = await _apiService.isAuthenticated();
 
       if (_isAuthenticated) {
-        _userData = await _apiService.getUserInfo();
+        final userData = await _apiService.getUserInfo();
+        if (userData != null) {
+          _userData = userData;
+          _user = User.fromJson(userData);
+        }
       } else {
         _userData = null;
+        _user = null;
       }
 
       _error = null;
@@ -39,6 +46,7 @@ class AuthProvider with ChangeNotifier {
       _error = e.toString();
       _isAuthenticated = false;
       _userData = null;
+      _user = null;
     }
 
     _isLoading = false;
@@ -57,6 +65,9 @@ class AuthProvider with ChangeNotifier {
       if (success) {
         _isAuthenticated = true;
         _userData = await _apiService.getUserInfo();
+        if (_userData != null) {
+          _user = User.fromJson(_userData!);
+        }
       } else {
         _isAuthenticated = false;
         _error = 'Credenciales inválidas';

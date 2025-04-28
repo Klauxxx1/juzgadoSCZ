@@ -36,13 +36,6 @@ class MainDrawer extends StatelessWidget {
               'Expedientes',
               '/expedientes',
             ),
-            _buildDrawerItem(context, Icons.event, 'Audiencias', '/audiencias'),
-            _buildDrawerItem(
-              context,
-              Icons.insert_drive_file,
-              'Documentos',
-              '/documentos',
-            ),
             _buildDrawerItem(
               context,
               Icons.track_changes,

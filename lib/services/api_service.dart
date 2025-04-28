@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService {
-  // URL a la dirección del backend con mi IP por el emulador andorid
+  // URL a la dirección del backend con mi IP por el emulador andorid (perdi 4horas en esto) >:c
   final String baseUrl = 'http://192.168.100.104:3000/api';
   final storage = const FlutterSecureStorage();
 

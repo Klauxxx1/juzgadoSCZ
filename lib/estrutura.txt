@@ -1,0 +1,66 @@
+lib/
+├── main.dart
+├── models/
+│   ├── user_model.dart
+│   ├── expediente_model.dart
+│   ├── audiencia_model.dart
+│   ├── documento_model.dart
+│   ├── seguimiento_model.dart
+│   └── notificacion_model.dart
+├── providers/
+│   ├── auth_provider.dart
+│   ├── expediente_provider.dart
+│   ├── audiencia_provider.dart
+│   ├── seguimiento_provider.dart
+│   └── notificacion_provider.dart
+├── screens/
+│   ├── auth/
+│   │   ├── login_screen.dart
+│   │   └── register_screen.dart
+│   ├── home/
+│   │   ├── cliente_home.dart
+│   │   ├── abogado_home.dart
+│   │   ├── juez_home.dart
+│   │   └── asistente_home.dart
+│   ├── perfil/
+│   │   └── edit_profile_screen.dart
+│   ├── expediente/
+│   │   ├── expediente_list_screen.dart
+│   │   ├── expediente_detail_screen.dart
+│   │   ├── expediente_edit_screen.dart  # Solo juez/asistente
+│   │   └── expediente_create_screen.dart # Solo asistente
+│   ├── audiencia/
+│   │   ├── audiencia_list_screen.dart
+│   │   ├── audiencia_detail_screen.dart
+│   │   ├── audiencia_create_screen.dart  # Solo juez
+│   │   ├── audiencia_edit_screen.dart    # Solo juez
+│   │   └── post_audiencia_screen.dart    # Solo abogado
+│   ├── seguimiento/
+│   │   ├── seguimiento_list_screen.dart
+│   │   ├── seguimiento_detail_screen.dart
+│   │   ├── seguimiento_create_screen.dart
+│   │   └── tarea_list_screen.dart
+│   └── notificacion/
+│       ├── notificacion_list_screen.dart
+│       └── notificacion_create_screen.dart  # Solo juez
+├── services/
+│   ├── api_service.dart
+│   ├── auth_service.dart
+│   └── role_service.dart
+├── widgets/
+│   ├── common/
+│   │   ├── app_drawer.dart   # Drawer adaptativo según rol
+│   │   └── loading_widget.dart
+│   ├── expediente/
+│   │   ├── expediente_card.dart
+│   │   └── estado_dropdown.dart  # Solo juez
+│   ├── audiencia/
+│   │   ├── audiencia_card.dart
+│   │   └── calendario_widget.dart
+│   └── seguimiento/
+│       ├── tarea_item.dart
+│       └── nota_item.dart
+└── utils/
+    ├── constants.dart
+    ├── routes.dart
+    └── role_based_route.dart

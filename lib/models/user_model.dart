@@ -3,7 +3,7 @@ class User {
   final String nombre;
   final String apellido;
   final String email;
-  final String? rol;
+  final String rol; // Cliente, Abogado, Juez, Asistente
   final String? token;
 
   User({
@@ -11,7 +11,7 @@ class User {
     required this.nombre,
     required this.apellido,
     required this.email,
-    this.rol,
+    required this.rol,
     this.token,
   });
 
@@ -21,10 +21,16 @@ class User {
       nombre: json['nombre'],
       apellido: json['apellido'],
       email: json['email'],
-      rol: json['rol'],
+      rol: json['rol'] ?? 'Cliente', // Valor predeterminado
       token: json['token'],
     );
   }
+
+  // Métodos de autorización
+  bool get isCliente => rol == 'Cliente';
+  bool get isAbogado => rol == 'Abogado';
+  bool get isJuez => rol == 'Juez';
+  bool get isAsistente => rol == 'Asistente';
 
   Map<String, dynamic> toJson() {
     return {
