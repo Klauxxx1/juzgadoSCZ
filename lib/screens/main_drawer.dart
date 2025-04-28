@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:si2/services/api_service.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ApiService _apiService = ApiService();
+
     return Drawer(
+      // Mantenemos el mismo contenido pero cambiamos la función de logout
       child: Container(
         color: Colors.white,
         child: ListView(
@@ -57,9 +60,9 @@ class MainDrawer extends StatelessWidget {
               leading: const Icon(Icons.logout, color: Color(0xFFB71C1C)),
               title: const Text('Cerrar sesión'),
               onTap: () async {
-                await FirebaseAuth.instance.signOut();
+                // Usamos el nuevo servicio de API
+                await _apiService.signOut();
                 Navigator.pushNamedAndRemoveUntil(
-                  // ignore: use_build_context_synchronously
                   context,
                   '/login',
                   (route) => false,

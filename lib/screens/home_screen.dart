@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:si2/screens/auth/drawer/main_drawer.dart';
+import 'package:si2/screens/main_drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomeScreen extends StatefulWidget {

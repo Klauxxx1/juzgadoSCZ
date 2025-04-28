@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:si2/screens/auth/home_screen.dart';
-import 'package:si2/screens/auth/login_screen.dart';
-import 'package:si2/screens/auth/register_screen.dart';
-import 'package:si2/screens/modules/expediente/expediente_screem.dart';
-import 'package:si2/screens/modules/usuario/usuario_screen.dart';
-import 'firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'package:si2/providers/auth_provider.dart';
+import 'package:si2/screens/home_screen.dart';
+import 'package:si2/screens/login_screen.dart';
+import 'package:si2/screens/register_screen.dart';
+import 'package:si2/services/auth_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (context) => AuthProvider(), child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,13 +22,8 @@ class MyApp extends StatelessWidget {
       title: 'App para Jueces, Abogados, Asistentes y Secretarios',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Color(0xFFB71C1C), // Rojo
-        scaffoldBackgroundColor: const Color.fromRGBO(
-          241,
-          222,
-          190,
-          1,
-        ), // Fondo blanco
+        primaryColor: Color(0xFFB71C1C),
+        scaffoldBackgroundColor: const Color.fromRGBO(241, 222, 190, 1),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFFB71C1C),
@@ -42,13 +37,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
+        '/': (context) => AuthChecker(),
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
         '/home': (context) => HomeScreen(),
-        '/usuario': (context) => const UserInfoScreen(),
-        '/expedientes': (context) => ExpedienteListScreen(),
       },
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:si2/screens/auth/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,8 +13,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String password = '';
   String confirmPassword = '';
   bool isLoading = false;
-
-  final _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -72,21 +69,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         setState(() => isLoading = true);
-                        final user = await _authService.register(
-                          email,
-                          password,
-                        );
                         setState(() => isLoading = false);
 
-                        if (user != null) {
-                          Navigator.pushReplacementNamed(context, '/home');
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Error al registrar usuario'),
-                            ),
-                          );
-                        }
+                        Navigator.pushReplacementNamed(context, '/home');
                       }
                     },
                     child: Text('Registrarme'),
