@@ -59,17 +59,23 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-
     try {
       final success = await _apiService.signIn(email, password);
+      // if (success) {
+      //   await checkAuthStatus(); // Cargar los datos del usuario después del login
+      //   return true;
+      // }
+      // if(success.mensaje = )
+      _user = User(
+        id: success.usuario.id,
+        nombre: success.usuario.nombre,
+        apellido: success.usuario.apellido,
+        email: email,
+        rol: success.usuario.rol,
+        token: success.token,
+      );
 
-      if (success) {
-        await checkAuthStatus(); // Cargar los datos del usuario después del login
-        return true;
-      }
-
-      _error = "Credenciales inválidas";
-      return false;
+      return true;
     } catch (e) {
       _error = e.toString();
       return false;

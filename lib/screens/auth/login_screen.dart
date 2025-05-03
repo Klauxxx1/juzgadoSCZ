@@ -242,13 +242,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
       try {
         final success = await authProvider.signIn(
           _emailController.text.trim(),
           _passwordController.text,
         );
-
         if (success) {
           // Verificar si el rol del usuario coincide con el rol seleccionado
           final user = authProvider.user;

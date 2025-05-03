@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:si2/models/expediente_model.dart';
 import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/services/api_service.dart';
+import 'package:si2/services/expediente_service.dart';
 
 class ExpedienteProvider with ChangeNotifier {
   final AuthProvider? _authProvider;
-  final ApiService _apiService = ApiService();
+  final ExpedienteService _apiService = ExpedienteService();
 
   List<Expediente> _expedientes = [];
   bool _isLoading = false;
@@ -31,9 +32,9 @@ class ExpedienteProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final List<Expediente> expedientesList =
-          await _apiService.getExpedientes();
-      _expedientes = expedientesList;
+      // final List<Expediente> expedientesList =
+      //     await _apiService.getExpedientes();
+      // _expedientes = expedientesList;
       notifyListeners();
     } catch (e) {
       _error = e.toString();
@@ -197,10 +198,10 @@ class ExpedienteProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final Expediente expediente = await _apiService.getExpedienteById(
-        expedienteId,
-      );
-      _expedienteSeleccionado = expediente;
+      // final Expediente expediente = await _apiService.getExpedienteById(
+      //   expedienteId,
+      // );
+      // _expedienteSeleccionado = expediente;
       notifyListeners();
     } catch (e) {
       _error = e.toString();
