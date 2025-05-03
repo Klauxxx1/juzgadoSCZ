@@ -21,7 +21,7 @@ lib/
 │   │   ├── cliente_home.dart
 │   │   ├── abogado_home.dart
 │   │   ├── juez_home.dart
-│   │   └── asistente_home.dart
+│   │   
 │   ├── perfil/
 │   │   └── edit_profile_screen.dart
 │   ├── expediente/

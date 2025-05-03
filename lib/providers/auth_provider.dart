@@ -5,7 +5,6 @@ import 'package:si2/models/user_model.dart';
 class AuthProvider with ChangeNotifier {
   final ApiService _apiService = ApiService();
 
-  bool _isAuthenticated = false;
   bool _isLoading = false;
   String? _error;
   Map<String, dynamic>? _userData;
@@ -23,38 +22,40 @@ class AuthProvider with ChangeNotifier {
   }
 
   // Verificar si el usuario está autenticado
-  Future<void> checkAuthStatus() async {
+  Future<bool> checkAuthStatus() async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _isAuthenticated = await _apiService.isAuthenticated();
+      final isLogged = await _apiService.isAuthenticated();
 
-      if (_isAuthenticated) {
+      if (isLogged) {
         final userData = await _apiService.getUserInfo();
         if (userData != null) {
-          _userData = userData;
           _user = User.fromJson(userData);
         }
+        _error = null;
+        notifyListeners();
+        return true;
       } else {
-        _userData = null;
         _user = null;
+        _error = null;
+        notifyListeners();
+        return false;
       }
-
-      _error = null;
     } catch (e) {
       _error = e.toString();
-      _isAuthenticated = false;
-      _userData = null;
       _user = null;
+      notifyListeners();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
-  // Iniciar sesión
-  Future<bool> login(String email, String password) async {
+  // Método para iniciar sesión
+  Future<bool> signIn(String email, String password) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -63,25 +64,18 @@ class AuthProvider with ChangeNotifier {
       final success = await _apiService.signIn(email, password);
 
       if (success) {
-        _isAuthenticated = true;
-        _userData = await _apiService.getUserInfo();
-        if (_userData != null) {
-          _user = User.fromJson(_userData!);
-        }
-      } else {
-        _isAuthenticated = false;
-        _error = 'Credenciales inválidas';
+        await checkAuthStatus(); // Cargar los datos del usuario después del login
+        return true;
       }
 
-      _isLoading = false;
-      notifyListeners();
-      return success;
-    } catch (e) {
-      _isAuthenticated = false;
-      _error = e.toString();
-      _isLoading = false;
-      notifyListeners();
+      _error = "Credenciales inválidas";
       return false;
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -95,7 +89,6 @@ class AuthProvider with ChangeNotifier {
       final success = await _apiService.register(email, password);
 
       if (success) {
-        _isAuthenticated = true;
         _userData = await _apiService.getUserInfo();
       } else {
         _error = 'Error al registrar el usuario';
@@ -147,13 +140,118 @@ class AuthProvider with ChangeNotifier {
 
     try {
       await _apiService.signOut();
-      _isAuthenticated = false;
-      _userData = null;
+      _user = null;
+      _error = null;
     } catch (e) {
       _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> signOut() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _apiService.signOut();
+      _user = null;
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Actualizar el perfil del usuario actual
+  Future<bool> actualizarPerfil(Map<String, dynamic> userData) async {
+    if (_user == null) {
+      _error = "No hay usuario autenticado";
+      notifyListeners();
+      return false;
     }
 
-    _isLoading = false;
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      final success = await _apiService.actualizarUsuario(_user!.id!, userData);
+      if (success) {
+        await checkAuthStatus(); // Recargar datos del usuario
+        return true;
+      } else {
+        _error = "Error al actualizar perfil";
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Cambiar contraseña del usuario actual
+  Future<bool> cambiarContrasena(
+    String contrasenaActual,
+    String nuevaContrasena,
+  ) async {
+    if (_user == null) {
+      _error = "No hay usuario autenticado";
+      notifyListeners();
+      return false;
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _apiService.cambiarContrasena(
+        _user!.id!,
+        contrasenaActual,
+        nuevaContrasena,
+      );
+
+      if (success) {
+        return true;
+      } else {
+        _error = "Error al cambiar la contraseña";
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Método para solicitar reseteo de contraseña
+  Future<bool> resetPassword(String email) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final success = await _apiService.resetPassword(email);
+
+      if (success) {
+        return true;
+      } else {
+        _error = "No se pudo enviar el correo de recuperación";
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

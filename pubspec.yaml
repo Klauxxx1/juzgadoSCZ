@@ -51,12 +51,12 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-fflutter:
+flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/che1.jpg
-  #   - assets/images/login2.jpg
+    - assets/images/
+  #  - assets/login1.jpg
   #   - assets/images/login3.jpg
   #   - assets/images/login4.jpg
   #   - assets/images/login5.jpg

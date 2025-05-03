@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:si2/services/api_service.dart';
 
@@ -6,7 +8,7 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ApiService _apiService = ApiService();
+    final ApiService apiService = ApiService();
 
     return Drawer(
       // Mantenemos el mismo contenido pero cambiamos la función de logout
@@ -54,7 +56,7 @@ class MainDrawer extends StatelessWidget {
               title: const Text('Cerrar sesión'),
               onTap: () async {
                 // Usamos el nuevo servicio de API
-                await _apiService.signOut();
+                await apiService.signOut();
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/login',
