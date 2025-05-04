@@ -21,22 +21,34 @@ import 'package:si2/screens/admin/expediente_form_screen.dart';
 import 'package:si2/screens/admin/expediente_detalle_screen.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
-          create: (_) => UsuarioProvider(null),
-          update: (_, auth, __) => UsuarioProvider(auth),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
-          create: (_) => ExpedienteProvider(null),
-          update: (_, auth, __) => ExpedienteProvider(auth),
-        ),
-      ],
-      child: MyApp(),
-    ),
-  );
+  WidgetsFlutterBinding.ensureInitialized(); // Aseguramos inicialización
+  initializeDateFormatting('es', null).then((_) {
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
+            create: (_) => UsuarioProvider(null),
+            update: (_, auth, __) => UsuarioProvider(auth),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
+            create: (_) => ExpedienteProvider(null),
+            update: (_, auth, __) => ExpedienteProvider(auth),
+          ),
+
+          // ChangeNotifierProxyProvider<AuthProvider, SeguimientoProvider>(
+          //   create: (_) => SeguimientoProvider(null),
+          //   update: (_, auth, __) => SeguimientoProvider(auth),
+          // ),
+          // ChangeNotifierProxyProvider<AuthProvider, NotificacionProvider>(
+          //   create: (_) => NotificacionProvider(null),
+          //   update: (_, auth, __) => NotificacionProvider(auth),
+          // ),
+        ],
+        child: MyApp(),
+      ),
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -92,10 +104,15 @@ class MyApp extends StatelessWidget {
         '/admin/expedientes/crear': (context) => ExpedienteFormScreen(),
         '/admin/expedientes/editar': (context) => ExpedienteFormScreen(),
         '/admin/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
+
         // Rutas de expedientes
-        //        '/expedientes': (context) => ExpedienteListScreen(),
+        // '/expedientes': (context) => ExpedienteListScreen(),
         '/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
-        //       '/expedientes/abogado': (context) => ExpedienteListScreen(), // La misma pantalla se adapta
+        // '/expedientes/abogado': (context) => ExpedienteListScreen(),
+
+        // Audiencias
+        '/audiencias': (context) => AudienciaListScreen(),
+        // '/audiencias/detalle': (context) => AudienciaDetailScreen(), // Descomenta cuando esté listo
       },
     );
   }
