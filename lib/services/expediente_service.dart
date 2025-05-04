@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:si2/models/ExpedienteResponse.dart/ExpedienteGetResponse.dart';
-import 'package:si2/models/expediente_model.dart';
 
 class ExpedienteService {
   final String baseUrl =

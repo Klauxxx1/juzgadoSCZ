@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:si2/models/expediente_model.dart';
 import 'package:si2/providers/auth_provider.dart';
-import 'package:si2/services/api_service.dart';
 import 'package:si2/services/expediente_service.dart';
 
 class ExpedienteProvider with ChangeNotifier {

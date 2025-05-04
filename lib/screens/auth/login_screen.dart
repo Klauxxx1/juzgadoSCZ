@@ -206,29 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
                 // Mensaje de registro
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    /*Text(
-                      '¿No tienes una cuenta? ',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/registro',
-                          arguments: {'role': _selectedRole},
-                        );
-                      },
-                      child: const Text(
-                        'Regístrate',
-                        style: TextStyle(
-                          color: Color(0xFF1565C0),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),*/
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   ],
                 ),
               ],
