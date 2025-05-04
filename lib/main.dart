@@ -6,8 +6,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/providers/expediente_provider.dart';
-import 'package:si2/providers/seguimiento_provider.dart';
-import 'package:si2/providers/notificacion_provider.dart';
 import 'package:si2/providers/usuario_provider.dart';
 import 'package:si2/screens/audiencia/audiencia_list_screen.dart';
 import 'package:si2/screens/auth/login_screen.dart';
@@ -16,7 +14,6 @@ import 'package:si2/screens/auth/role_selection_screen.dart';
 import 'package:si2/screens/admin/usuario_detalle_screen.dart';
 import 'package:si2/screens/admin/usuario_form_screen.dart';
 import 'package:si2/screens/admin/usuarios_admin_screen.dart';
-import 'package:si2/screens/expediente/expediente_list_screen.dart';
 import 'package:si2/screens/home/home_screen.dart';
 import 'package:si2/screens/perfil/perfil_screen.dart';
 import 'package:si2/screens/admin/expedientes_admin_screen.dart';
@@ -24,33 +21,22 @@ import 'package:si2/screens/admin/expediente_form_screen.dart';
 import 'package:si2/screens/admin/expediente_detalle_screen.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // Aseguramos inicialización
-  initializeDateFormatting('es', null).then((_) {
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => AuthProvider()),
-          ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
-            create: (_) => UsuarioProvider(null),
-            update: (_, auth, __) => UsuarioProvider(auth),
-          ),
-          ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
-            create: (_) => ExpedienteProvider(null),
-            update: (_, auth, __) => ExpedienteProvider(auth),
-          ),
-          ChangeNotifierProxyProvider<AuthProvider, SeguimientoProvider>(
-            create: (_) => SeguimientoProvider(null),
-            update: (_, auth, __) => SeguimientoProvider(auth),
-          ),
-          ChangeNotifierProxyProvider<AuthProvider, NotificacionProvider>(
-            create: (_) => NotificacionProvider(null),
-            update: (_, auth, __) => NotificacionProvider(auth),
-          ),
-        ],
-        child: MyApp(),
-      ),
-    );
-  });
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
+          create: (_) => UsuarioProvider(null),
+          update: (_, auth, __) => UsuarioProvider(auth),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
+          create: (_) => ExpedienteProvider(null),
+          update: (_, auth, __) => ExpedienteProvider(auth),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -106,15 +92,10 @@ class MyApp extends StatelessWidget {
         '/admin/expedientes/crear': (context) => ExpedienteFormScreen(),
         '/admin/expedientes/editar': (context) => ExpedienteFormScreen(),
         '/admin/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
-
         // Rutas de expedientes
-        '/expedientes': (context) => ExpedienteListScreen(),
+        //        '/expedientes': (context) => ExpedienteListScreen(),
         '/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
-        '/expedientes/abogado': (context) => ExpedienteListScreen(),
-
-        // Audiencias
-        '/audiencias': (context) => AudienciaListScreen(),
-        // '/audiencias/detalle': (context) => AudienciaDetailScreen(), // Descomenta cuando esté listo
+        //       '/expedientes/abogado': (context) => ExpedienteListScreen(), // La misma pantalla se adapta
       },
     );
   }
