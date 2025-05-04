@@ -39,7 +39,7 @@ class User {
       direccion: json['direccion'],
       especialidad: json['especialidad'],
       numeroMatricula: json['numeroMatricula'],
-      fotoPerfil: json['fotoPerfil'],
+      fotoPerfil: json['fotoPerfi l'],
       fechaRegistro:
           json['fechaRegistro'] != null
               ? DateTime.parse(json['fechaRegistro'])
@@ -48,11 +48,11 @@ class User {
   }
 
   // Métodos de autorización
-  bool get isCliente => rol == 'Cliente';
-  bool get isAbogado => rol == 'Abogado';
-  bool get isJuez => rol == 'Juez';
-  bool get isAsistente => rol == 'Asistente';
-  bool get isAdministrador => rol == 'Administrador';
+  bool get isCliente => rol == 'cliente';
+  bool get isAbogado => rol == 'abogado';
+  bool get isJuez => rol == 'juez';
+  bool get isAsistente => rol == 'asistente';
+  bool get isAdministrador => rol == 'administrador';
 
   Map<String, dynamic> toJson() {
     return {

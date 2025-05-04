@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:si2/models/ExpedienteResponse.dart/ExpedienteGetResponse.dart';
 import 'package:si2/models/expediente_model.dart';
+import 'package:si2/models/user_model.dart';
 
 class ExpedienteService {
   final String baseUrl =
@@ -12,32 +13,108 @@ class ExpedienteService {
 
   // ==================== MÉTODOS DE EXPEDIENTE ====================
 
-  _getDatosDePrueba() {
+  List<Expediente> _getDatosDePrueba() {
+    final now = DateTime.now();
+
     return [
-      ExpedienteGetResponse(
-        numeroExpediente: 1,
-        demandanteCarnet: '12345678',
-        demandadoCarnet: '87654321',
-        abogadoDemandanteCarnet: 'AB123456',
-        abogadoDemandadoCarnet: 'AB876543',
-        juezCarnet: 'JU123456',
-        contenido: 'Contenido del expediente 1',
+      Expediente(
+        id: 1,
+        numero: 'EXP-2025-001',
+        titulo: 'Caso de Divorcio',
+        descripcion: 'Proceso de divorcio por mutuo acuerdo entre las partes',
+        fechaApertura: now.subtract(Duration(days: 30)),
+        estado: 'Abierto',
+        tipo: 'Civil',
+        cliente: User(
+          id: 101,
+          nombre: 'Juan',
+          apellido: 'Pérez',
+          email: 'juan.perez@example.com',
+          rol: 'Cliente',
+        ),
+        juez: User(
+          id: 102,
+          nombre: 'María',
+          apellido: 'Gómez',
+          email: 'maria.gomez@example.com',
+          rol: 'Juez',
+        ),
+        abogado: User(
+          id: 103,
+          nombre: 'Carlos',
+          apellido: 'Rodríguez',
+          email: 'carlos.rodriguez@example.com',
+          rol: 'Abogado',
+        ),
       ),
-      ExpedienteGetResponse(
-        numeroExpediente: 2,
-        demandanteCarnet: '23456789',
-        demandadoCarnet: '98765432',
-        abogadoDemandanteCarnet: 'AB234567',
-        abogadoDemandadoCarnet: 'AB987654',
-        juezCarnet: 'JU234567',
-        contenido: 'Contenido del expediente 2',
+      Expediente(
+        id: 2,
+        numero: 'EXP-2025-002',
+        titulo: 'Demanda Laboral',
+        descripcion:
+            'Demanda por despido injustificado y cobro de prestaciones',
+        fechaApertura: now.subtract(Duration(days: 60)),
+        estado: 'En resolución',
+        tipo: 'Laboral',
+        cliente: User(
+          id: 104,
+          nombre: 'Ana',
+          apellido: 'Martínez',
+          email: 'ana.martinez@example.com',
+          rol: 'Cliente',
+        ),
+        juez: User(
+          id: 105,
+          nombre: 'Roberto',
+          apellido: 'Díaz',
+          email: 'roberto.diaz@example.com',
+          rol: 'Juez',
+        ),
+        abogado: User(
+          id: 103,
+          nombre: 'Carlos',
+          apellido: 'Rodríguez',
+          email: 'carlos.rodriguez@example.com',
+          rol: 'Abogado',
+        ),
+      ),
+      Expediente(
+        id: 3,
+        numero: 'EXP-2025-003',
+        titulo: 'Sucesión Testamentaria',
+        descripcion: 'Trámite de sucesión testamentaria de bienes inmuebles',
+        fechaApertura: now.subtract(Duration(days: 90)),
+        estado: 'Cerrado',
+        fechaCierre: now.subtract(Duration(days: 10)),
+        tipo: 'Civil',
+        cliente: User(
+          id: 106,
+          nombre: 'Laura',
+          apellido: 'Sánchez',
+          email: 'laura.sanchez@example.com',
+          rol: 'Cliente',
+        ),
+        juez: User(
+          id: 102,
+          nombre: 'María',
+          apellido: 'Gómez',
+          email: 'maria.gomez@example.com',
+          rol: 'Juez',
+        ),
+        abogado: User(
+          id: 103,
+          nombre: 'Carlos',
+          apellido: 'Rodríguez',
+          email: 'carlos.rodriguez@example.com',
+          rol: 'Abogado',
+        ),
       ),
     ];
   }
   // Obtener un expediente por su número
 
   // Obtener todos los expedientes (para administradores)
-  Future<List<ExpedienteGetResponse>> getExpedientes() async {
+  Future<List<Expediente>> getExpedientes() async {
     try {
       final token = await storage.read(key: 'jwt_token');
       final response = await http.get(
@@ -48,7 +125,8 @@ class ExpedienteService {
         },
       );
       if (response.statusCode == 200) {
-        return expedienteGetResponseFromJson(response.body);
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => Expediente.fromJson(json)).toList();
       } else {
         // Datos de ejemplo si la API falla
         return _getDatosDePrueba();
@@ -110,6 +188,40 @@ class ExpedienteService {
         print('Error al obtener expedientes del abogado: ${e.toString()}');
       }
       return null;
+    }
+  }
+
+  // Método auxiliar para obtener un expediente de prueba por ID
+  Expediente _getDatosDePruebaById(int expedienteId) {
+    final expedientes = _getDatosDePrueba();
+    final expediente = expedientes.firstWhere(
+      (exp) => exp.id == expedienteId,
+      orElse: () => expedientes[0], // Devolver el primero si no encuentra
+    );
+    return expediente;
+  }
+
+  Future<Expediente> getExpedienteById(int expedienteId) async {
+    try {
+      final token = await storage.read(key: 'jwt_token');
+      final response = await http.get(
+        Uri.parse('$baseUrl/expedientes/$expedienteId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return Expediente.fromJson(data);
+      } else {
+        // Si la API falla, buscar en datos de prueba
+        return _getDatosDePruebaById(expedienteId);
+      }
+    } catch (e) {
+      // Usar datos de ejemplo en caso de error
+      return _getDatosDePruebaById(expedienteId);
     }
   }
 

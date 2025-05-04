@@ -13,7 +13,7 @@ class AdminHome extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Panel de Administración'),
+        title: Text('Panel de Administración Fadi'),
         backgroundColor: Color(0xFFB71C1C),
         foregroundColor: Colors.white,
       ),
@@ -24,7 +24,7 @@ class AdminHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Bienvenido, ${user?.nombre}',
+              'Bienvenido Anashe, ${user?.nombre}',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

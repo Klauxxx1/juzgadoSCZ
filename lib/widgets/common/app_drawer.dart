@@ -13,7 +13,7 @@ class AppDrawer extends StatelessWidget {
     final user = authProvider.user;
 
     return Drawer(
-      child: Column(
+      child: ListView(
         children: [
           // Encabezado con información del usuario
           UserAccountsDrawerHeader(

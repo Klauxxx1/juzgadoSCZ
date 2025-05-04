@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Bienvenido, ${user?.nombre ?? 'Usuario'}',
+                      'Bienvenido anashe, ${user?.nombre ?? 'Usuario'}',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

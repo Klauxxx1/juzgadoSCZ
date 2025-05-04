@@ -32,9 +32,9 @@ class ExpedienteProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      // final List<Expediente> expedientesList =
-      //     await _apiService.getExpedientes();
-      // _expedientes = expedientesList;
+      final List<Expediente> expedientesList =
+          await _apiService.getExpedientes();
+      _expedientes = expedientesList;
       notifyListeners();
     } catch (e) {
       _error = e.toString();
@@ -198,10 +198,10 @@ class ExpedienteProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      // final Expediente expediente = await _apiService.getExpedienteById(
-      //   expedienteId,
-      // );
-      // _expedienteSeleccionado = expediente;
+      final Expediente expediente = await _apiService.getExpedienteById(
+        expedienteId,
+      );
+      _expedienteSeleccionado = expediente;
       notifyListeners();
     } catch (e) {
       _error = e.toString();

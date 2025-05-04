@@ -1,12 +1,15 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/providers/expediente_provider.dart';
 import 'package:si2/providers/seguimiento_provider.dart';
 import 'package:si2/providers/notificacion_provider.dart';
 import 'package:si2/providers/usuario_provider.dart';
+import 'package:si2/screens/audiencia/audiencia_list_screen.dart';
 import 'package:si2/screens/auth/login_screen.dart';
 import 'package:si2/screens/auth/recover_password_screen.dart';
 import 'package:si2/screens/auth/role_selection_screen.dart';
@@ -21,30 +24,33 @@ import 'package:si2/screens/admin/expediente_form_screen.dart';
 import 'package:si2/screens/admin/expediente_detalle_screen.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
-          create: (_) => UsuarioProvider(null),
-          update: (_, auth, __) => UsuarioProvider(auth),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
-          create: (_) => ExpedienteProvider(null),
-          update: (_, auth, __) => ExpedienteProvider(auth),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, SeguimientoProvider>(
-          create: (_) => SeguimientoProvider(null),
-          update: (_, auth, __) => SeguimientoProvider(auth),
-        ),
-        ChangeNotifierProxyProvider<AuthProvider, NotificacionProvider>(
-          create: (_) => NotificacionProvider(null),
-          update: (_, auth, __) => NotificacionProvider(auth),
-        ),
-      ],
-      child: MyApp(),
-    ),
-  );
+  WidgetsFlutterBinding.ensureInitialized(); // Aseguramos inicialización
+  initializeDateFormatting('es', null).then((_) {
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
+            create: (_) => UsuarioProvider(null),
+            update: (_, auth, __) => UsuarioProvider(auth),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
+            create: (_) => ExpedienteProvider(null),
+            update: (_, auth, __) => ExpedienteProvider(auth),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, SeguimientoProvider>(
+            create: (_) => SeguimientoProvider(null),
+            update: (_, auth, __) => SeguimientoProvider(auth),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, NotificacionProvider>(
+            create: (_) => NotificacionProvider(null),
+            update: (_, auth, __) => NotificacionProvider(auth),
+          ),
+        ],
+        child: MyApp(),
+      ),
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -55,6 +61,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sistema Legal',
       debugShowCheckedModeBanner: false,
+
+      // Configuración de localización
+      locale: const Locale('es'),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es'),
+        Locale('en'), // Incluir inglés como respaldo
+      ],
+
       theme: ThemeData(
         primaryColor: Color(0xFFB71C1C),
         colorScheme: ColorScheme.fromSwatch().copyWith(
@@ -85,22 +104,17 @@ class MyApp extends StatelessWidget {
         // Rutas de administración de expedientes
         '/admin/expedientes': (context) => ExpedientesAdminScreen(),
         '/admin/expedientes/crear': (context) => ExpedienteFormScreen(),
-        '/admin/expedientes/editar':
-            (context) =>
-                ExpedienteFormScreen(), // La misma pantalla para editar
+        '/admin/expedientes/editar': (context) => ExpedienteFormScreen(),
         '/admin/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
-
-        // Ruta de roles y permisos (implementar esta pantalla también)
-        //'/admin/roles': (context) => RolesPermisosScreen(),
 
         // Rutas de expedientes
         '/expedientes': (context) => ExpedienteListScreen(),
         '/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
-        '/expedientes/abogado':
-            (context) => ExpedienteListScreen(), // La misma pantalla se adapta
-        // Asegúrate de tener también:
-        //  '/seguimientos/crear': (context) => SeguimientoCreateScreen(),
-        //  '/audiencias/detalle': (context) => AudienciaDetailScreen(),
+        '/expedientes/abogado': (context) => ExpedienteListScreen(),
+
+        // Audiencias
+        '/audiencias': (context) => AudienciaListScreen(),
+        // '/audiencias/detalle': (context) => AudienciaDetailScreen(), // Descomenta cuando esté listo
       },
     );
   }
