@@ -24,7 +24,7 @@ class AdminHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Bienvenido Anashe, ${user?.nombre}',
+              'Bienvenido(a), ${user?.nombre}',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
