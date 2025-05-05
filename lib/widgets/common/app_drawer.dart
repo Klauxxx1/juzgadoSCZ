@@ -45,7 +45,7 @@ class AppDrawer extends StatelessWidget {
           ),
 
           // Opciones según el rol
-          if (user?.isAdministrador == true) ...[
+          /*if (user?.isAdministrador == true) ...[
             Divider(),
             ListTile(
               leading: Icon(Icons.admin_panel_settings),
@@ -76,7 +76,7 @@ class AppDrawer extends StatelessWidget {
                 Navigator.pushNamed(context, '/admin/roles');
               },
             ),
-          ],
+          ],*/
 
           // Sección de expedientes
           Divider(),
@@ -166,8 +166,6 @@ class AppDrawer extends StatelessWidget {
 
   Color _getColorForRole(String role) {
     switch (role) {
-      case 'Administrador':
-        return Colors.purple;
       case 'Juez':
         return Colors.red;
       case 'Abogado':

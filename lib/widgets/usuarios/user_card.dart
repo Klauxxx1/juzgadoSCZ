@@ -99,8 +99,8 @@ class UserCard extends StatelessWidget {
 
   Color _getColorForRole(String role) {
     switch (role) {
-      case 'Administrador':
-        return Colors.purple;
+      //  case 'Administrador':
+      //    return Colors.purple;
       case 'Juez':
         return Colors.red;
       case 'Abogado':

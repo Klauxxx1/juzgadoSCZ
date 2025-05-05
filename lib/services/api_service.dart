@@ -171,20 +171,52 @@ class ApiService {
     }
   }
 
-  // Crear un usuario (ya existente)
+  // Crear un usuario (modificado)
   Future<bool> crearUsuario(Map<String, dynamic> userData) async {
     try {
       final token = await storage.read(key: 'jwt_token');
       if (token == null) return false;
 
+      // Obtener el rol para determinar qué endpoint usar
+      final String rol = userData['rol'];
+      String endpoint;
+
+      // Seleccionar el endpoint adecuado según las imágenes de tu backend
+      switch (rol) {
+        case 'Administrador':
+          endpoint = '$baseUrl/crearAdministrador';
+          break;
+        case 'Juez':
+          endpoint = '$baseUrl/crearJuez';
+          break;
+        case 'Abogado':
+          endpoint = '$baseUrl/crearAbogado';
+          break;
+        case 'Cliente':
+          endpoint = '$baseUrl/crearCliente';
+          break;
+        default:
+          throw Exception('Rol no válido');
+      }
+
+      if (kDebugMode) {
+        print('Enviando datos a: $endpoint');
+        print('Datos: ${jsonEncode(userData)}');
+      }
+
       final response = await http.post(
-        Uri.parse('$baseUrl/admin/usuarios'),
+        Uri.parse(endpoint),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(userData),
       );
+
+      if (kDebugMode) {
+        print('Respuesta: ${response.statusCode}');
+        print('Cuerpo de respuesta: ${response.body}');
+      }
 
       return response.statusCode == 201 || response.statusCode == 200;
     } catch (e) {

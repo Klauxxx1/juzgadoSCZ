@@ -11,14 +11,8 @@ import 'package:si2/screens/audiencia/audiencia_list_screen.dart';
 import 'package:si2/screens/auth/login_screen.dart';
 import 'package:si2/screens/auth/recover_password_screen.dart';
 import 'package:si2/screens/auth/role_selection_screen.dart';
-import 'package:si2/screens/admin/usuario_detalle_screen.dart';
-import 'package:si2/screens/admin/usuario_form_screen.dart';
-import 'package:si2/screens/admin/usuarios_admin_screen.dart';
 import 'package:si2/screens/home/home_screen.dart';
 import 'package:si2/screens/perfil/perfil_screen.dart';
-import 'package:si2/screens/admin/expedientes_admin_screen.dart';
-import 'package:si2/screens/admin/expediente_form_screen.dart';
-import 'package:si2/screens/admin/expediente_detalle_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // Aseguramos inicialización
@@ -92,23 +86,6 @@ class MyApp extends StatelessWidget {
         '/recuperar-contrasena': (context) => const RecoverPasswordScreen(),
         '/home': (context) => const HomeScreen(),
         '/perfil': (context) => PerfilScreen(),
-
-        // Rutas de administración de usuarios
-        '/admin/usuarios': (context) => UsuariosAdminScreen(),
-        '/admin/usuarios/crear': (context) => CrearUsuarioScreen(),
-        '/admin/usuarios/editar': (context) => EditarUsuarioScreen(),
-        '/admin/usuarios/detalle': (context) => DetalleUsuarioScreen(),
-
-        // Rutas de administración de expedientes
-        '/admin/expedientes': (context) => ExpedientesAdminScreen(),
-        '/admin/expedientes/crear': (context) => ExpedienteFormScreen(),
-        '/admin/expedientes/editar': (context) => ExpedienteFormScreen(),
-        '/admin/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
-
-        // Rutas de expedientes
-        // '/expedientes': (context) => ExpedienteListScreen(),
-        '/expedientes/detalle': (context) => ExpedienteDetalleScreen(),
-        // '/expedientes/abogado': (context) => ExpedienteListScreen(),
 
         // Audiencias
         '/audiencias': (context) => AudienciaListScreen(),

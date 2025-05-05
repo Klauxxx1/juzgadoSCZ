@@ -272,8 +272,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   IconData _getRoleIcon(String role) {
     switch (role.toLowerCase()) {
-      case 'administrador':
-        return Icons.admin_panel_settings;
       case 'juez':
         return Icons.gavel;
       case 'abogado':

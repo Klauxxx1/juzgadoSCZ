@@ -41,12 +41,12 @@ class RoleSelectionScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildRoleCard(
+                    /* _buildRoleCard(
                       context: context,
                       role: 'Administrador',
                       icon: Icons.admin_panel_settings,
                       description: 'Gestiona todos los aspectos del sistema',
-                    ),
+                    ),*/
                     _buildRoleCard(
                       context: context,
                       role: 'Juez',
