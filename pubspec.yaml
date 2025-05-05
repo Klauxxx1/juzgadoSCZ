@@ -61,8 +61,6 @@ flutter:
     - assets/images/
   #  - assets/login1.jpg
   #   - assets/images/login3.jpg
-  #   - assets/images/login4.jpg
-  #   - assets/images/login5.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

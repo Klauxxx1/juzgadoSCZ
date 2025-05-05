@@ -147,7 +147,11 @@ class AppDrawer extends StatelessWidget {
             title: Text('Cerrar Sesión'),
             onTap: () async {
               await authProvider.signOut();
-              Navigator.pushReplacementNamed(context, '/login');
+              Navigator.pushReplacementNamed(
+                context,
+                '/',
+                arguments: (route) => false,
+              );
             },
           ),
         ],

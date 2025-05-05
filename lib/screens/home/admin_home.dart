@@ -13,7 +13,7 @@ class AdminHome extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Panel de Administración Fadi'),
+        title: Text('Panel de Administración '),
         backgroundColor: Color(0xFFB71C1C),
         foregroundColor: Colors.white,
       ),
