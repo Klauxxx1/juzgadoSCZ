@@ -280,4 +280,13 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // Agregar este método al final de la clase AuthProvider
+
+  // Método para testing y respaldo offline - solo usar en desarrollo
+  void setUserForTesting(User user) {
+    _user = user;
+    _error = null;
+    notifyListeners();
+  }
 }

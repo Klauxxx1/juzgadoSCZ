@@ -59,8 +59,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
     // Forzar la recarga de los datos del usuario
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await authProvider
-        .checkAuthStatus(); // Esto va a recargar los datos del usuario del API
+    // await authProvider
+    //     .checkAuthStatus(); // Esto va a recargar los datos del usuario del API
 
     setState(() {
       final user = authProvider.user;

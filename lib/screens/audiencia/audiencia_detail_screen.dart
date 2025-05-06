@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/screens/audiencia/audiencia_list_screen.dart';
 
 class AudienciaDetailScreen extends StatefulWidget {
@@ -26,6 +28,8 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.user;
     return Scaffold(
       appBar: AppBar(
         title: Text('Detalle de Audiencia'),
@@ -67,15 +71,17 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
         ),
       ),
       bottomNavigationBar:
-          _puedeEditar
+          (user?.rol == "juez") && _puedeEditar
               ? BottomAppBar(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 8.0,
                   ),
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                     children: [
                       Expanded(
                         child: ElevatedButton(
@@ -90,6 +96,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
                         ),
                       ),
                       SizedBox(width: 16),
+
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(

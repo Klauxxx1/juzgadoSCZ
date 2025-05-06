@@ -146,14 +146,16 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
+
             title: Text('Cerrar Sesión'),
-            onTap: () async {
-              await authProvider.signOut();
-              Navigator.pushReplacementNamed(
+            onTap: () {
+              // Guardar una referencia al provider antes de la navegación
+
+              // Primero cerrar el drawer
+              Navigator.pop(context);
+              Navigator.of(
                 context,
-                '/login',
-                arguments: (route) => false,
-              );
+              ).pushNamedAndRemoveUntil('/login', (route) => false);
             },
           ),
         ],
