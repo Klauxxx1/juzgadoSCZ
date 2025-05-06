@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:si2/models/user_model.dart';
+import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/screens/audiencia/audiencia_detail_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -135,6 +138,8 @@ class _AudienciaListScreenState extends State<AudienciaListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.user;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calendario de Audiencias'),
@@ -224,16 +229,27 @@ class _AudienciaListScreenState extends State<AudienciaListScreen> {
           Expanded(child: _buildAudienciasList()),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Aquí puedes agregar la navegación a la pantalla de creación de audiencias
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Crear nueva audiencia')));
-        },
-        child: Icon(Icons.add),
-        tooltip: 'Crear nueva audiencia',
-      ),
+      floatingActionButton:
+          user?.rol == 'juez'
+              ? FloatingActionButton(
+                onPressed: () {
+                  // Cambiamos el SnackBar por la navegación real a la pantalla de creación
+                  Navigator.of(context).pushNamed('/audiencias/crear').then((
+                    value,
+                  ) {
+                    if (value == true) {
+                      // Recargar audiencias si se creó una nueva
+                      setState(() {
+                        _cargarAudiencias();
+                      });
+                    }
+                  });
+                },
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Icon(Icons.add, color: Colors.white),
+                tooltip: 'Crear nueva audiencia',
+              )
+              : null,
     );
   }
 

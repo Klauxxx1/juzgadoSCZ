@@ -7,11 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/providers/expediente_provider.dart';
 import 'package:si2/providers/usuario_provider.dart';
+import 'package:si2/screens/audiencia/audiencia_crear_screen.dart';
 import 'package:si2/screens/audiencia/audiencia_list_screen.dart';
 import 'package:si2/screens/auth/login_screen.dart';
 import 'package:si2/screens/auth/recover_password_screen.dart';
-import 'package:si2/screens/auth/role_selection_screen.dart';
 import 'package:si2/screens/home/home_screen.dart';
+import 'package:si2/screens/notificaciones/notifcaciones_screen.dart';
+import 'package:si2/screens/notificaciones/notificaciones_create_screen.dart';
 import 'package:si2/screens/perfil/perfil_screen.dart';
 
 void main() {
@@ -79,9 +81,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const RoleSelectionScreen(),
+        // '/': (context) => const RoleSelectionScreen(),
         '/login': (context) => const LoginScreen(),
         '/recuperar-contrasena': (context) => const RecoverPasswordScreen(),
         '/home': (context) => const HomeScreen(),
@@ -89,7 +91,13 @@ class MyApp extends StatelessWidget {
 
         // Audiencias
         '/audiencias': (context) => AudienciaListScreen(),
+        '/audiencias/crear': (context) => AudienciaCrearScreen(),
+
         // '/audiencias/detalle': (context) => AudienciaDetailScreen(), // Descomenta cuando esté listo
+        '/notificaciones': (context) => const NotificacionesScreen(),
+        '/notificaciones/crear':
+            (context) =>
+                const NotificacionesCreateScreen(), // Descomenta cuando esté listo
       },
     );
   }

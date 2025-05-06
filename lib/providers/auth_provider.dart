@@ -185,6 +185,26 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final success = await _apiService.actualizarUsuario(_user!.id!, userData);
+      switch (_user!.rol) {
+        case 'cliente':
+          userData['rol'] = 'cliente';
+          break;
+        case 'abogado':
+          userData['rol'] = 'abogado';
+          break;
+        case 'juez':
+          userData['rol'] = 'juez';
+          break;
+        case 'asistente':
+          userData['rol'] = 'asistente';
+          break;
+        case 'administrador':
+          userData['rol'] = 'administrador';
+          break;
+        default:
+          _error = "Rol de usuario no válido";
+          return false;
+      }
       if (success) {
         await checkAuthStatus(); // Recargar datos del usuario
         return true;

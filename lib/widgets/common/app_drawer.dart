@@ -101,26 +101,28 @@ class AppDrawer extends StatelessWidget {
                 user?.isAdministrador == true
                     ? '/audiencias'
                     : user?.isJuez == true
-                    ? '/audiencias/juez'
+                    ? '/audiencias'
                     : user?.isAbogado == true
-                    ? '/audiencias/abogado'
+                    ? '/audiencias'
                     : user?.isAsistente == true
-                    ? '/audiencias/asistente'
-                    : '/audiencias/cliente',
+                    ? '/audiencias'
+                    : user?.isCliente == true
+                    ? '/audiencias'
+                    : '/audiencias', // Default route
               );
             },
           ),
 
           // Sección de seguimientos (excepto clientes)
-          if (user?.isCliente == false)
-            ListTile(
-              leading: Icon(Icons.assignment),
-              title: Text('Seguimientos'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/seguimientos');
-              },
-            ),
+          // if (user?.isCliente == false)
+          //   ListTile(
+          //     leading: Icon(Icons.assignment),
+          //     title: Text('Seguimientos'),
+          //     onTap: () {
+          //       Navigator.pop(context);
+          //       Navigator.pushNamed(context, '/seguimientos');
+          //     },
+          //   ),
 
           // Notificaciones para todos
           ListTile(
@@ -149,7 +151,7 @@ class AppDrawer extends StatelessWidget {
               await authProvider.signOut();
               Navigator.pushReplacementNamed(
                 context,
-                '/',
+                '/login',
                 arguments: (route) => false,
               );
             },

@@ -44,23 +44,18 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFB71C1C)),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Form(
             key: _formKey,
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
+
                 Center(
                   child: Text(
                     'Inicio de sesión',
@@ -71,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 40),
                 // Mostrar el rol seleccionado
                 if (_selectedRole != null)
