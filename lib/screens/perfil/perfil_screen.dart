@@ -221,7 +221,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                       ),
 
                       // Botón editar perfil
-                      if (!_isEditing)
+                      /*if (!_isEditing)
                         ElevatedButton.icon(
                           icon: Icon(Icons.edit),
                           label: Text('Editar Perfil'),
@@ -238,7 +238,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                               _isEditing = true;
                             });
                           },
-                        ),
+                        ),*/
                     ],
                   ),
                 ),
@@ -296,27 +296,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 validator:
                     (val) => val!.isEmpty ? 'El apellido es obligatorio' : null,
               ),
-              _buildTextField(
-                label: 'Teléfono',
-                controller: _telefonoController,
-                prefixIcon: Icons.phone,
-                keyboardType: TextInputType.phone,
-              ),
-              _buildTextField(
-                label: 'Dirección',
-                controller: _direccionController,
-                prefixIcon: Icons.location_on,
-              ),
-
-              // Campos profesionales según el rol
-              if (user.isAbogado || user.isJuez)
-                _buildTextField(
-                  label: 'Especialidad',
-                  controller: _especialidadController,
-                  prefixIcon: Icons.work,
-                ),
-
-              SizedBox(height: 20),
 
               // Botones de acción
               Row(
@@ -382,24 +361,9 @@ class _PerfilScreenState extends State<PerfilScreen> {
         // Sección de Contacto
         _buildInfoCard('Información de Contacto', Icons.contact_phone, [
           _buildInfoRow('Email', user.email),
-          _buildInfoRow('Teléfono', user.telefono ?? 'No especificado'),
-          _buildInfoRow('Dirección', user.direccion ?? 'No especificada'),
+          // _buildInfoRow('Teléfono', user.telefono ?? 'No especificado'),
+          // _buildInfoRow('Dirección', user.direccion ?? 'No especificada'),
         ]),
-
-        // Información profesional para roles específicos
-        if (user.isAbogado || user.isJuez) ...[
-          SizedBox(height: 16),
-          _buildInfoCard('Información Profesional', Icons.work, [
-            _buildInfoRow(
-              'Especialidad',
-              user.especialidad ?? 'No especificada',
-            ),
-            if (user.isAbogado && user.numeroMatricula != null)
-              _buildInfoRow('N° Matrícula', user.numeroMatricula.toString()),
-          ]),
-        ],
-
-        SizedBox(height: 24),
 
         // Botón de cambio de contraseña
         ElevatedButton.icon(
@@ -682,18 +646,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
     final userData = {
       'nombre': _nombreController.text.trim(),
       'apellido': _apellidoController.text.trim(),
-      'telefono':
-          _telefonoController.text.trim().isNotEmpty
-              ? _telefonoController.text.trim()
-              : null,
-      'direccion':
-          _direccionController.text.trim().isNotEmpty
-              ? _direccionController.text.trim()
-              : null,
-      'especialidad':
-          _especialidadController.text.trim().isNotEmpty
-              ? _especialidadController.text.trim()
-              : null,
     };
 
     final success = await authProvider.actualizarPerfil(userData);
