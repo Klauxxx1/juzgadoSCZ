@@ -1,6 +1,6 @@
 //
 //  Generated file. Do not edit.
-//
+// CHE
 
 import FlutterMacOS
 import Foundation

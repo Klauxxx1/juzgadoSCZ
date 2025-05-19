@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart'; // Para kDebugMode
 class ApiService {
   // URL del backend
   final String baseUrl =
-      'https://juzgado-backend-production.up.railway.app/api';
+      'https://si2backendjuzgado-production.up.railway.app/'; //api nuevo backend de ANTHONY
   final storage = const FlutterSecureStorage();
 
   // ==================== MÉTODOS DE AUTENTICACIÓN ====================
