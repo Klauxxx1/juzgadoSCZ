@@ -1,9 +1,11 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:si2/providers/audiencia_provider.dart';
 import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/providers/expediente_provider.dart';
 import 'package:si2/providers/usuario_provider.dart';
@@ -16,8 +18,10 @@ import 'package:si2/screens/notificaciones/notifcaciones_screen.dart';
 import 'package:si2/screens/notificaciones/notificaciones_create_screen.dart';
 import 'package:si2/screens/perfil/perfil_screen.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Aseguramos inicialización
+
+  await dotenv.load();
   initializeDateFormatting('es', null).then((_) {
     runApp(
       MultiProvider(
@@ -31,7 +35,11 @@ void main() {
             create: (_) => ExpedienteProvider(null),
             update: (_, auth, __) => ExpedienteProvider(auth),
           ),
-
+          // Añadir AudienciaProvider
+          ChangeNotifierProxyProvider<AuthProvider, AudienciaProvider>(
+            create: (_) => AudienciaProvider(null),
+            update: (_, auth, __) => AudienciaProvider(auth),
+          ),
           // ChangeNotifierProxyProvider<AuthProvider, SeguimientoProvider>(
           //   create: (_) => SeguimientoProvider(null),
           //   update: (_, auth, __) => SeguimientoProvider(auth),

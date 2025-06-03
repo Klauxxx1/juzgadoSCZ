@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:si2/models/user_model.dart';
+import 'package:si2/models/AuthResponse_model.dart';
+
 import 'package:si2/providers/auth_provider.dart';
 import 'package:si2/services/api_service.dart';
+import 'package:si2/services/user_service.dart';
 
 class UsuarioProvider with ChangeNotifier {
   final AuthProvider? _authProvider;
@@ -11,6 +13,8 @@ class UsuarioProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   User? _usuarioSeleccionado;
+
+  final UserService _userService = UserService();
 
   // Getters
   List<User> get usuarios => _usuarios;
@@ -131,7 +135,7 @@ class UsuarioProvider with ChangeNotifier {
 
     // El administrador puede editar a cualquiera
     // Un usuario normal solo puede editarse a sí mismo
-    if (!user.isAdministrador && user.id != id) {
+    if (!user.isAdministrador && user.idUsuario != id) {
       _error = "No tienes permisos para editar este usuario";
       notifyListeners();
       return false;
@@ -156,12 +160,12 @@ class UsuarioProvider with ChangeNotifier {
           await cargarUsuarios();
         }
         // Si el usuario está editando su propio perfil, actualizar el AuthProvider
-        else if (user.id == id) {
+        else if (user.idUsuario == id) {
           await _authProvider.checkAuthStatus();
         }
 
         // Si estábamos viendo este usuario, actualizar detalles
-        if (_usuarioSeleccionado?.id == id) {
+        if (_usuarioSeleccionado?.idUsuario == id) {
           await obtenerDetallesUsuario(id);
         }
 
@@ -194,9 +198,9 @@ class UsuarioProvider with ChangeNotifier {
     try {
       final success = await _apiService.eliminarUsuario(id);
       if (success) {
-        _usuarios.removeWhere((user) => user.id == id);
+        _usuarios.removeWhere((user) => user.idUsuario == id);
 
-        if (_usuarioSeleccionado?.id == id) {
+        if (_usuarioSeleccionado?.idUsuario == id) {
           _usuarioSeleccionado = null;
         }
 
@@ -253,7 +257,7 @@ class UsuarioProvider with ChangeNotifier {
     final user = _authProvider!.user!;
 
     // Solo el propio usuario o el administrador pueden cambiar la contraseña
-    if (!user.isAdministrador && user.id != id) {
+    if (!user.isAdministrador && user.idUsuario != id) {
       _error = "No tienes permisos para cambiar esta contraseña";
       notifyListeners();
       return false;
@@ -288,7 +292,7 @@ class UsuarioProvider with ChangeNotifier {
 
   // Filtrar usuarios por rol
   List<User> filtrarPorRol(String rol) {
-    return _usuarios.where((user) => user.rol == rol).toList();
+    return _usuarios.where((user) => user.idRol == rol).toList();
   }
 
   // Buscar usuarios
@@ -299,8 +303,67 @@ class UsuarioProvider with ChangeNotifier {
           (user) =>
               user.nombre.toLowerCase().contains(query) ||
               user.apellido.toLowerCase().contains(query) ||
-              user.email.toLowerCase().contains(query),
+              user.correo.toLowerCase().contains(query),
         )
         .toList();
+  }
+
+  Future<bool> editarPerfil(Map<String, dynamic> userData) async {
+    // Verificar si hay un usuario autenticado
+    if (_authProvider?.user == null) {
+      _error = "Usuario no autenticado";
+      notifyListeners();
+      return false;
+    }
+
+    final usuario = _authProvider!.user!;
+    final int userId = usuario.idUsuario;
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      // Usar el servicio de usuario para actualizar el perfil
+      final success = await _userService.actualizarUsuario(userId, userData);
+
+      if (success) {
+        // Actualizar localmente sin hacer otra llamada al backend
+        _authProvider!.actualizarUsuarioLocal(userData);
+
+        // Si estábamos viendo este usuario, actualizar sus detalles localmente
+        if (_usuarioSeleccionado?.idUsuario == userId) {
+          // Actualiza _usuarioSeleccionado con los nuevos datos
+          if (_usuarioSeleccionado != null) {
+            _usuarioSeleccionado = User(
+              idUsuario: _usuarioSeleccionado!.idUsuario,
+              nombre: userData['nombre'] ?? _usuarioSeleccionado!.nombre,
+              apellido: userData['apellido'] ?? _usuarioSeleccionado!.apellido,
+              correo: userData['correo'] ?? _usuarioSeleccionado!.correo,
+              telefono: userData['telefono'] ?? _usuarioSeleccionado!.telefono,
+              calle: userData['calle'] ?? _usuarioSeleccionado!.calle,
+              ciudad: userData['ciudad'] ?? _usuarioSeleccionado!.ciudad,
+              codigoPostal:
+                  userData['codigo_postal'] ??
+                  _usuarioSeleccionado!.codigoPostal,
+              estadoUsuario: _usuarioSeleccionado!.estadoUsuario,
+              fechaRegistro: _usuarioSeleccionado!.fechaRegistro,
+              idRol: _usuarioSeleccionado!.idRol,
+            );
+          }
+        }
+
+        return true;
+      } else {
+        _error = "No se pudo actualizar el perfil";
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

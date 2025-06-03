@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Panel de ${user?.rol ?? 'Usuario'}',
+                      'Panel de ${user?.idRol ?? 'Usuario'}',
                       style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     ),
                   ],
@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            _buildAccessButtons(context, user?.rol ?? ''),
+            _buildAccessButtons(context, user?.idRol ?? ''),
           ],
         ),
       ),

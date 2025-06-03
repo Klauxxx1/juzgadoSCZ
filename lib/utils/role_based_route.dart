@@ -29,7 +29,7 @@ class RoleBasedRoute extends StatelessWidget {
       return unauthorizedRoute;
     }
 
-    switch (user.rol) {
+    switch (user.idRol) {
       case 'Administrador':
         return adminRoute;
       case 'Cliente':

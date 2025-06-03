@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:si2/models/user_model.dart';
+import 'package:si2/models/AuthResponse_model.dart';
 import 'package:si2/providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -226,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // Verificar si el rol del usuario coincide con el rol seleccionado
           final user = authProvider.user;
           if (user != null) {
-            if (_roleMatches(user.rol, _selectedRole)) {
+            if (_roleMatches(user.idRol, _selectedRole)) {
               // Navegar al home
               Navigator.pushReplacementNamed(context, '/home');
             } else {
@@ -284,14 +284,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Crear un usuario estático según el email
       final usuarioEstatico = User(
-        id: 1,
+        idUsuario: 1,
         nombre:
             rol.substring(0, 1).toUpperCase() +
             rol.substring(1), // Capitalizar (ej: Juez)
         apellido: 'Demo',
-        email: email,
-        rol: rol,
-        token: 'token_estatico_${DateTime.now().millisecondsSinceEpoch}',
+        correo: email,
+        idRol: rol,
+        telefono: '1234567890',
+        calle: 'Calle Ficticia',
+        ciudad: 'Ciudad Ficticia',
+        codigoPostal: '12345',
+        estadoUsuario: 'Activo',
+        fechaRegistro: DateTime.now(),
       );
 
       // Asignar el usuario al proveedor mediante un método privado

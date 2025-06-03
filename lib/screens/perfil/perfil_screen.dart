@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:si2/models/AuthResponse_model.dart';
 import 'package:si2/providers/auth_provider.dart';
+import 'package:si2/screens/perfil/editarPerfil_screen.dart';
 import 'package:si2/widgets/common/app_drawer.dart';
-import 'package:si2/models/user_model.dart';
 import 'package:si2/widgets/common/loading_indicator.dart';
 
 class PerfilScreen extends StatefulWidget {
@@ -68,8 +69,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
         _nombreController.text = user.nombre;
         _apellidoController.text = user.apellido;
         _telefonoController.text = user.telefono ?? '';
-        _direccionController.text = user.direccion ?? '';
-        _especialidadController.text = user.especialidad ?? '';
+        _direccionController.text = user.ciudad ?? '';
+        _especialidadController.text = user.idRol ?? '';
       }
       _isLoading = false;
     });
@@ -162,7 +163,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                       // Foto de perfil
                       CircleAvatar(
                         radius: 60,
-                        backgroundColor: _getColorForRole(user.rol),
+                        backgroundColor: _getColorForRole(user.idRol),
                         child: Text(
                           _getInitials(user.nombre, user.apellido),
                           style: TextStyle(fontSize: 42, color: Colors.white),
@@ -188,15 +189,15 @@ class _PerfilScreenState extends State<PerfilScreen> {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: _getColorForRole(user.rol).withOpacity(0.2),
+                          color: _getColorForRole(user.idRol).withOpacity(0.2),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          user.rol,
+                          user.idRol,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: _getColorForRole(user.rol),
+                            color: _getColorForRole(user.idRol),
                           ),
                         ),
                       ),
@@ -210,7 +211,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                             Icon(Icons.email, color: Colors.grey),
                             SizedBox(width: 8),
                             Text(
-                              user.email,
+                              user.correo,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey[700],
@@ -349,6 +350,14 @@ class _PerfilScreenState extends State<PerfilScreen> {
         _buildInfoCard('Información Personal', Icons.person_outline, [
           _buildInfoRow('Nombre', user.nombre),
           _buildInfoRow('Apellido', user.apellido),
+          _buildInfoRow('Teléfono', user.telefono ?? 'No especificado'),
+          _buildInfoRow('Ciudad', user.ciudad ?? 'No especificada'),
+          _buildInfoRow('Calle', user.calle ?? 'No especificada'),
+          _buildInfoRow(
+            'Codigo Postal',
+            user.codigoPostal ?? 'No especificada',
+          ),
+          _buildInfoRow('Especialidad', user.idRol ?? 'No especificada'),
           if (user.fechaRegistro != null)
             _buildInfoRow(
               'Fecha de registro',
@@ -360,7 +369,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
         // Sección de Contacto
         _buildInfoCard('Información de Contacto', Icons.contact_phone, [
-          _buildInfoRow('Email', user.email),
+          _buildInfoRow('Email', user.correo),
           // _buildInfoRow('Teléfono', user.telefono ?? 'No especificado'),
           // _buildInfoRow('Dirección', user.direccion ?? 'No especificada'),
         ]),
@@ -380,9 +389,30 @@ class _PerfilScreenState extends State<PerfilScreen> {
           onPressed:
               () => _mostrarDialogoCambiarPassword(
                 context,
-                user.id!,
+                user.idUsuario!,
                 Provider.of<AuthProvider>(context, listen: false),
               ),
+        ),
+
+        SizedBox(height: 16),
+
+        ElevatedButton.icon(
+          icon: Icon(Icons.person),
+          label: Text('Editar Usuario'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue[700],
+            foregroundColor: Colors.white,
+            minimumSize: Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () {
+            // Navegar a la pantalla de edición de perfil
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => EditarPerfilScreen()),
+            );
+          },
         ),
       ],
     );

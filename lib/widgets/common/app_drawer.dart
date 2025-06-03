@@ -24,9 +24,9 @@ class AppDrawer extends StatelessWidget {
                   : 'Usuario',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            accountEmail: Text(user?.email ?? ''),
+            accountEmail: Text(user?.correo ?? ''),
             currentAccountPicture: CircleAvatar(
-              backgroundColor: _getColorForRole(user?.rol ?? ''),
+              backgroundColor: _getColorForRole(user?.idRol ?? ''),
               child: Text(
                 _getInitials(user?.nombre ?? '', user?.apellido ?? ''),
                 style: TextStyle(fontSize: 24, color: Colors.white),

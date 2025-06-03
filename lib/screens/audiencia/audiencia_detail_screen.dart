@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:si2/models/AudienciaResponse_model.dart';
+import 'package:si2/models/AudienciaUsuariosResponse_model.dart';
 import 'package:si2/providers/auth_provider.dart';
-import 'package:si2/screens/audiencia/audiencia_list_screen.dart';
+import 'package:si2/providers/audiencia_provider.dart';
 
 class AudienciaDetailScreen extends StatefulWidget {
-  final Audiencia audiencia;
+  final AudienciaResponse audiencia;
 
   const AudienciaDetailScreen({Key? key, required this.audiencia})
     : super(key: key);
@@ -17,6 +19,60 @@ class AudienciaDetailScreen extends StatefulWidget {
 class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
   bool _puedeEditar = false;
   late String _estadoActual;
+  bool _cargandoUsuarios = false;
+  String? _errorUsuarios;
+  AudienciaUsuariosResponse? _participantes;
+
+  // Métodos para obtener TimeOfDay a partir de la fecha
+  TimeOfDay get _horaInicio => TimeOfDay(
+    hour: widget.audiencia.fecha.hour,
+    minute: widget.audiencia.fecha.minute,
+  );
+
+  TimeOfDay get _horaFin {
+    final horasAdicionales = widget.audiencia.duracion?.hours ?? 1;
+    final DateTime horaFinDateTime = widget.audiencia.fecha.add(
+      Duration(hours: horasAdicionales),
+    );
+    return TimeOfDay(
+      hour: horaFinDateTime.hour,
+      minute: horaFinDateTime.minute,
+    );
+  }
+
+  // Método para obtener color según estado
+  Color _getColorPorEstado(String estado) {
+    switch (estado) {
+      case 'Programada':
+        return Colors.blue;
+      case 'En curso':
+        return Colors.green;
+      case 'Finalizada':
+        return Colors.grey;
+      case 'Cancelada':
+        return Colors.red;
+      default:
+        return Colors.orange;
+    }
+  }
+
+  // Método para obtener color según rol
+  Color _getColorPorRol(String rol) {
+    switch (rol.toLowerCase()) {
+      case 'juez':
+        return Colors.purple;
+      case 'abogado':
+        return Colors.blue;
+      case 'demandante':
+        return Colors.green;
+      case 'demandado':
+        return Colors.red;
+      case 'testigo':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
 
   @override
   void initState() {
@@ -24,6 +80,36 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
     _estadoActual = widget.audiencia.estado;
     // Solo permitir edición si la audiencia está programada
     _puedeEditar = widget.audiencia.estado == 'Programada';
+
+    // Cargar participantes al iniciar
+    _cargarParticipantes();
+  }
+
+  Future<void> _cargarParticipantes() async {
+    setState(() {
+      _cargandoUsuarios = true;
+      _errorUsuarios = null;
+    });
+
+    try {
+      final audienciaProvider = Provider.of<AudienciaProvider>(
+        context,
+        listen: false,
+      );
+      final result = await audienciaProvider.obtenerUsuariosAudiencia(
+        widget.audiencia.idAudiencia,
+      );
+
+      setState(() {
+        _participantes = result;
+        _cargandoUsuarios = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorUsuarios = e.toString();
+        _cargandoUsuarios = false;
+      });
+    }
   }
 
   @override
@@ -64,24 +150,22 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
             _buildHeader(),
             _buildDatosBasicos(),
             _buildDetallesExpediente(),
-            _buildAccionesAudiencia(),
+            // _buildAccionesAudiencia(),
             _buildParticipantes(),
-            _buildHistorialEstados(),
+            // _buildHistorialEstados(),
           ],
         ),
       ),
       bottomNavigationBar:
-          (user?.rol == "juez") && _puedeEditar
+          (user?.idRol == "Juez") && _puedeEditar
               ? BottomAppBar(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
                     vertical: 8.0,
                   ),
-
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
                     children: [
                       Expanded(
                         child: ElevatedButton(
@@ -96,7 +180,6 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
                         ),
                       ),
                       SizedBox(width: 16),
-
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -114,6 +197,121 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
                 ),
               )
               : null,
+    );
+  }
+
+  Widget _buildParticipantes() {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Participantes',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                if (_cargandoUsuarios)
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else if (_errorUsuarios != null)
+                  IconButton(
+                    icon: Icon(Icons.refresh, color: Colors.red),
+                    onPressed: _cargarParticipantes,
+                    tooltip: 'Reintentar',
+                  ),
+              ],
+            ),
+            Divider(),
+            if (_cargandoUsuarios)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            else if (_errorUsuarios != null)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red, size: 40),
+                      SizedBox(height: 8),
+                      Text(
+                        'Error al cargar participantes',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        _errorUsuarios!,
+                        style: TextStyle(fontSize: 12),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: _cargarParticipantes,
+                        child: Text('Reintentar'),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else if (_participantes == null || _participantes!.usuarios.isEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.people_alt_outlined,
+                        color: Colors.grey,
+                        size: 40,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'No hay participantes registrados para esta audiencia',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              ListView.separated(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _participantes!.usuarios.length,
+                separatorBuilder:
+                    (context, index) => Divider(height: 16, indent: 60),
+                itemBuilder: (context, index) {
+                  final usuario = _participantes!.usuarios[index];
+                  return _buildParticipanteItem(
+                    '${usuario.nombre} ${usuario.apellido}',
+                    usuario.cargoEnAudiencia,
+                    usuario.rol,
+                    _getColorPorRol(usuario.cargoEnAudiencia),
+                    usuario.idUsuario,
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -136,10 +334,10 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: widget.audiencia.getColorPorEstado().withOpacity(0.2),
+                  color: _getColorPorEstado(_estadoActual).withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: widget.audiencia.getColorPorEstado(),
+                    color: _getColorPorEstado(_estadoActual),
                     width: 1,
                   ),
                 ),
@@ -149,13 +347,13 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
                     Icon(
                       Icons.circle,
                       size: 12,
-                      color: widget.audiencia.getColorPorEstado(),
+                      color: _getColorPorEstado(_estadoActual),
                     ),
                     SizedBox(width: 8),
                     Text(
                       _estadoActual,
                       style: TextStyle(
-                        color: widget.audiencia.getColorPorEstado(),
+                        color: _getColorPorEstado(_estadoActual),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -164,7 +362,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
               ),
               Spacer(),
               Text(
-                'ID: ${widget.audiencia.id}',
+                'ID: ${widget.audiencia.idAudiencia}',
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w500,
@@ -174,7 +372,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
           ),
           SizedBox(height: 16),
           Text(
-            widget.audiencia.titulo,
+            widget.audiencia.observacion,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -201,7 +399,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
               Icon(Icons.access_time, size: 18, color: Colors.grey[700]),
               SizedBox(width: 8),
               Text(
-                '${widget.audiencia.horaInicio.format(context)} - ${widget.audiencia.horaFin.format(context)}',
+                '${_horaInicio.format(context)} - ${_horaFin.format(context)}',
                 style: TextStyle(fontSize: 16, color: Colors.grey[800]),
               ),
             ],
@@ -230,7 +428,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
               ),
             ),
             Divider(),
-            _buildInfoRow('Sala:', widget.audiencia.sala, Icons.room),
+            _buildInfoRow('Ubicación:', widget.audiencia.ubicacion, Icons.room),
             _buildInfoRow('Duración:', _calcularDuracion(), Icons.timelapse),
             _buildInfoRow(
               'Tipo de Audiencia:',
@@ -265,7 +463,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
             Divider(),
             _buildInfoRow(
               'Número de Expediente:',
-              widget.audiencia.expedienteNumero,
+              widget.audiencia.idExpediente.toString(),
               Icons.folder,
             ),
             _buildInfoRow('Tipo de Caso:', 'Civil', Icons.gavel),
@@ -281,7 +479,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
             ),
             SizedBox(height: 8),
             Text(
-              'Este caso se refiere a un litigio por incumplimiento contractual entre las partes involucradas. Se requiere resolución urgente debido a los plazos establecidos en el contrato original.',
+              widget.audiencia.observacion,
               style: TextStyle(color: Colors.grey[800]),
             ),
           ],
@@ -351,65 +549,6 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
     );
   }
 
-  Widget _buildParticipantes() {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Participantes',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            Divider(),
-            _buildParticipanteItem(
-              'Dr. Carlos Mendoza',
-              'Juez',
-              'assets/images/avatar_juez.png',
-              Colors.purple,
-            ),
-            Divider(height: 16, indent: 60),
-            _buildParticipanteItem(
-              'Lic. María González',
-              'Abogado Demandante',
-              'assets/images/avatar_abogado1.png',
-              Colors.blue,
-            ),
-            Divider(height: 16, indent: 60),
-            _buildParticipanteItem(
-              'Lic. Roberto Sánchez',
-              'Abogado Demandado',
-              'assets/images/avatar_abogado2.png',
-              Colors.red,
-            ),
-            Divider(height: 16, indent: 60),
-            _buildParticipanteItem(
-              'Juan Pérez',
-              'Demandante',
-              'assets/images/avatar_demandante.png',
-              Colors.green,
-            ),
-            Divider(height: 16, indent: 60),
-            _buildParticipanteItem(
-              'Ana Rodríguez',
-              'Demandada',
-              'assets/images/avatar_demandado.png',
-              Colors.orange,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildHistorialEstados() {
     return Card(
       margin: EdgeInsets.all(16),
@@ -453,7 +592,7 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
                   ? 'Audiencia realizada correctamente'
                   : 'Audiencia cancelada por motivos de fuerza mayor',
               DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()),
-              widget.audiencia.getColorPorEstado(),
+              _getColorPorEstado(_estadoActual),
               false,
             ),
           ],
@@ -522,20 +661,28 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
 
   Widget _buildParticipanteItem(
     String nombre,
+    String cargo,
     String rol,
-    String avatarPath,
     Color color,
+    int idUsuario,
   ) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
         backgroundColor: color.withOpacity(0.2),
-        child: Icon(Icons.person, color: color),
-        // En caso de tener imágenes reales:
-        // backgroundImage: AssetImage(avatarPath),
+        child: Text(
+          nombre.isNotEmpty ? nombre[0].toUpperCase() : '?',
+          style: TextStyle(color: color, fontWeight: FontWeight.bold),
+        ),
       ),
       title: Text(nombre, style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(rol),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(cargo),
+          Text(rol, style: TextStyle(fontSize: 12, color: Colors.grey)),
+        ],
+      ),
       trailing: IconButton(
         icon: Icon(Icons.email_outlined, color: Colors.grey),
         onPressed: () {
@@ -651,52 +798,31 @@ class _AudienciaDetailScreenState extends State<AudienciaDetailScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Estado actualizado a: $nuevoEstado'),
-        backgroundColor:
-            nuevoEstado == 'En curso'
-                ? Colors.green
-                : nuevoEstado == 'Cancelada'
-                ? Colors.red
-                : nuevoEstado == 'Finalizada'
-                ? Colors.blue
-                : Colors.grey,
+        backgroundColor: _getColorPorEstado(nuevoEstado),
       ),
     );
   }
 
   String _calcularDuracion() {
-    // Calcular la duración entre hora inicio y hora fin
-    final horaInicio = TimeOfDay(
-      hour: widget.audiencia.horaInicio.hour,
-      minute: widget.audiencia.horaInicio.minute,
-    );
-    final horaFin = TimeOfDay(
-      hour: widget.audiencia.horaFin.hour,
-      minute: widget.audiencia.horaFin.minute,
-    );
+    final horas = widget.audiencia.duracion?.hours ?? 1;
 
-    int minInicio = horaInicio.hour * 60 + horaInicio.minute;
-    int minFin = horaFin.hour * 60 + horaFin.minute;
-    int duracionMinutos = minFin - minInicio;
-
-    int horas = duracionMinutos ~/ 60;
-    int minutos = duracionMinutos % 60;
-
-    if (horas > 0) {
-      return '$horas ${horas == 1 ? 'hora' : 'horas'} $minutos ${minutos == 1 ? 'minuto' : 'minutos'}';
+    if (horas == 1) {
+      return '1 hora';
     } else {
-      return '$minutos ${minutos == 1 ? 'minuto' : 'minutos'}';
+      return '$horas horas';
     }
   }
 
   String _obtenerTipoAudiencia() {
-    // Aquí puedes determinar el tipo basado en el título o alguna otra lógica
-    if (widget.audiencia.titulo.contains('conciliación')) {
+    // Determinar el tipo basado en el texto de la observación
+    final observacion = widget.audiencia.observacion.toLowerCase();
+    if (observacion.contains('conciliación')) {
       return 'Conciliación';
-    } else if (widget.audiencia.titulo.contains('sentencia')) {
+    } else if (observacion.contains('sentencia')) {
       return 'Sentencia';
-    } else if (widget.audiencia.titulo.contains('testigos')) {
+    } else if (observacion.contains('testigos')) {
       return 'Testimonial';
-    } else if (widget.audiencia.titulo.contains('pruebas')) {
+    } else if (observacion.contains('pruebas')) {
       return 'Probatoria';
     } else {
       return 'General';

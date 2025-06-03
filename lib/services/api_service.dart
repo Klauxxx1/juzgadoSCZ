@@ -7,8 +7,7 @@ import 'package:flutter/foundation.dart'; // Para kDebugMode
 
 class ApiService {
   // URL del backend
-  final String baseUrl =
-      'https://si2backendjuzgado-production.up.railway.app/'; //api nuevo backend de ANTHONY
+  final String baseUrl = 'http://192.168.100.63:3000/api';
   final storage = const FlutterSecureStorage();
 
   // ==================== MÉTODOS DE AUTENTICACIÓN ====================
@@ -19,10 +18,10 @@ class ApiService {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/login'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
+        body: jsonEncode({'correo': email, 'password': password}),
       );
-      final data = AuthResponse.fromJson(jsonDecode(response.body));
       if (response.statusCode == 200) {
+        final data = AuthResponse.fromJson(jsonDecode(response.body));
         await storage.write(key: 'jwt_token', value: data.token);
         return data;
       }

@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final authResponse = authResponseFromJson(jsonString);
+
 import 'dart:convert';
 
 AuthResponse authResponseFromJson(String str) =>
@@ -6,53 +10,80 @@ AuthResponse authResponseFromJson(String str) =>
 String authResponseToJson(AuthResponse data) => json.encode(data.toJson());
 
 class AuthResponse {
-  String mensaje;
   String token;
-  Usuario usuario;
+  User user;
 
-  AuthResponse({
-    required this.mensaje,
-    required this.token,
-    required this.usuario,
-  });
+  AuthResponse({required this.token, required this.user});
 
-  factory AuthResponse.fromJson(Map<String, dynamic> json) => AuthResponse(
-    mensaje: json["mensaje"],
-    token: json["token"],
-    usuario: Usuario.fromJson(json["usuario"]),
-  );
+  factory AuthResponse.fromJson(Map<String, dynamic> json) =>
+      AuthResponse(token: json["token"], user: User.fromJson(json["user"]));
 
-  Map<String, dynamic> toJson() => {
-    "mensaje": mensaje,
-    "token": token,
-    "usuario": usuario.toJson(),
-  };
+  Map<String, dynamic> toJson() => {"token": token, "user": user.toJson()};
 }
 
-class Usuario {
-  int id;
+class User {
+  int idUsuario;
   String nombre;
   String apellido;
-  String rol;
+  String correo;
+  String? passwordHash;
+  dynamic telefono;
+  dynamic calle;
+  dynamic ciudad;
+  dynamic codigoPostal;
+  String estadoUsuario;
+  DateTime fechaRegistro;
+  String idRol;
 
-  Usuario({
-    required this.id,
+  User({
+    required this.idUsuario,
     required this.nombre,
     required this.apellido,
-    required this.rol,
+    required this.correo,
+    this.passwordHash,
+    required this.telefono,
+    required this.calle,
+    required this.ciudad,
+    required this.codigoPostal,
+    required this.estadoUsuario,
+    required this.fechaRegistro,
+    required this.idRol,
   });
 
-  factory Usuario.fromJson(Map<String, dynamic> json) => Usuario(
-    id: json["id"],
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    idUsuario: json["id_usuario"],
     nombre: json["nombre"],
     apellido: json["apellido"],
-    rol: json["rol"],
+    correo: json["correo"],
+    passwordHash: json["password_hash"],
+    telefono: json["telefono"],
+    calle: json["calle"],
+    ciudad: json["ciudad"],
+    codigoPostal: json["codigo_postal"],
+    estadoUsuario: json["estado_usuario"],
+    fechaRegistro: DateTime.parse(json["fecha_registro"]),
+    idRol: json["id_rol"],
   );
 
+  // Métodos de autorización
+  bool get isCliente => idRol == 'Cliente';
+  bool get isAbogado => idRol == 'Abogado';
+  bool get isJuez => idRol == 'Juez';
+  bool get isAsistente => idRol == 'asistente';
+  bool get isAdministrador => idRol == 'Administrador';
+
   Map<String, dynamic> toJson() => {
-    "id": id,
+    "id_usuario": idUsuario,
     "nombre": nombre,
     "apellido": apellido,
-    "rol": rol,
+    "correo": correo,
+    "password_hash": passwordHash,
+    "telefono": telefono,
+    "calle": calle,
+    "ciudad": ciudad,
+    "codigo_postal": codigoPostal,
+    "estado_usuario": estadoUsuario,
+    "fecha_registro": fechaRegistro.toIso8601String(),
+    "id_rol": idRol,
   };
 }

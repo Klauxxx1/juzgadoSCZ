@@ -415,7 +415,7 @@ class _NotificacionesScreenState extends State<NotificacionesScreen>
               ),
       // Agregar después del cierre del body en el Scaffold
       floatingActionButton:
-          user != null && user.rol == "juez"
+          user != null && user.idRol == "Juez"
               ? FloatingActionButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed('/notificaciones/crear').then(

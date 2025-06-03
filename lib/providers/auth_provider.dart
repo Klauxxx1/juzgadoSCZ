@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:si2/models/AuthResponse_model.dart';
 import 'package:si2/services/api_service.dart';
-import 'package:si2/models/user_model.dart';
 
 class AuthProvider with ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -67,12 +67,17 @@ class AuthProvider with ChangeNotifier {
       // }
       // if(success.mensaje = )
       _user = User(
-        id: success.usuario.id,
-        nombre: success.usuario.nombre,
-        apellido: success.usuario.apellido,
-        email: email,
-        rol: success.usuario.rol,
-        token: success.token,
+        idUsuario: success.user.idUsuario,
+        nombre: success.user.nombre,
+        apellido: success.user.apellido,
+        correo: email,
+        telefono: success.user.telefono,
+        calle: success.user.calle,
+        ciudad: success.user.ciudad,
+        codigoPostal: success.user.codigoPostal,
+        estadoUsuario: success.user.estadoUsuario,
+        fechaRegistro: success.user.fechaRegistro,
+        idRol: success.user.idRol,
       );
 
       return true;
@@ -184,8 +189,11 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final success = await _apiService.actualizarUsuario(_user!.id!, userData);
-      switch (_user!.rol) {
+      final success = await _apiService.actualizarUsuario(
+        _user!.idUsuario!,
+        userData,
+      );
+      switch (_user!.idRol) {
         case 'cliente':
           userData['rol'] = 'cliente';
           break;
@@ -237,7 +245,7 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final success = await _apiService.cambiarContrasena(
-        _user!.id!,
+        _user!.idUsuario!,
         contrasenaActual,
         nuevaContrasena,
       );
@@ -287,6 +295,27 @@ class AuthProvider with ChangeNotifier {
   void setUserForTesting(User user) {
     _user = user;
     _error = null;
+    notifyListeners();
+  }
+
+  void actualizarUsuarioLocal(Map<String, dynamic> userData) {
+    if (_user == null) return;
+
+    // Crea un nuevo usuario con los datos actualizados
+    _user = User(
+      idUsuario: _user!.idUsuario,
+      nombre: userData['nombre'] ?? _user!.nombre,
+      apellido: userData['apellido'] ?? _user!.apellido,
+      correo: userData['correo'] ?? _user!.correo,
+      telefono: userData['telefono'] ?? _user!.telefono,
+      calle: userData['calle'] ?? _user!.calle,
+      ciudad: userData['ciudad'] ?? _user!.ciudad,
+      codigoPostal: userData['codigo_postal'] ?? _user!.codigoPostal,
+      estadoUsuario: _user!.estadoUsuario,
+      fechaRegistro: _user!.fechaRegistro,
+      idRol: _user!.idRol,
+    );
+
     notifyListeners();
   }
 }
