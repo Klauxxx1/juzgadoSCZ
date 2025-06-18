@@ -21,38 +21,32 @@ import 'package:si2/screens/perfil/perfil_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Aseguramos inicialización
 
-  await dotenv.load();
-  initializeDateFormatting('es', null).then((_) {
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => AuthProvider()),
-          ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
-            create: (_) => UsuarioProvider(null),
-            update: (_, auth, __) => UsuarioProvider(auth),
-          ),
-          ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
-            create: (_) => ExpedienteProvider(null),
-            update: (_, auth, __) => ExpedienteProvider(auth),
-          ),
-          // Añadir AudienciaProvider
-          ChangeNotifierProxyProvider<AuthProvider, AudienciaProvider>(
-            create: (_) => AudienciaProvider(null),
-            update: (_, auth, __) => AudienciaProvider(auth),
-          ),
-          // ChangeNotifierProxyProvider<AuthProvider, SeguimientoProvider>(
-          //   create: (_) => SeguimientoProvider(null),
-          //   update: (_, auth, __) => SeguimientoProvider(auth),
-          // ),
-          // ChangeNotifierProxyProvider<AuthProvider, NotificacionProvider>(
-          //   create: (_) => NotificacionProvider(null),
-          //   update: (_, auth, __) => NotificacionProvider(auth),
-          // ),
-        ],
-        child: MyApp(),
-      ),
-    );
-  });
+  // Especificar el nombre del archivo .env
+  await dotenv.load(fileName: ".env");
+
+  await initializeDateFormatting('es', null);
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, UsuarioProvider>(
+          create: (_) => UsuarioProvider(null),
+          update: (_, auth, __) => UsuarioProvider(auth),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, ExpedienteProvider>(
+          create: (_) => ExpedienteProvider(null),
+          update: (_, auth, __) => ExpedienteProvider(auth),
+        ),
+        // Añadir AudienciaProvider
+        ChangeNotifierProxyProvider<AuthProvider, AudienciaProvider>(
+          create: (_) => AudienciaProvider(null),
+          update: (_, auth, __) => AudienciaProvider(auth),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

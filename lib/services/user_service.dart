@@ -1,12 +1,13 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserService {
-  // URL base desde archivo .env
-  String get baseUrl => dotenv.env['BASE_URL'] ?? 'http://localhost:3000/api';
+  // URL base fija en lugar de usar dotenv
+  final String baseUrl =
+      dotenv.env['BASE_URL'] ?? 'http://192.168.100.104:3000/api';
   final storage = const FlutterSecureStorage();
 
   // Método PUT para actualizar usuario

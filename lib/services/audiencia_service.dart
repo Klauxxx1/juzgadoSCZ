@@ -8,7 +8,8 @@ import 'package:si2/models/AudienciaUsuariosResponse_model.dart';
 
 class AudienciaService {
   // URL base desde archivo .env
-  String get baseUrl => dotenv.env['BASE_URL'] ?? 'http://localhost:3000/api';
+  String get baseUrl =>
+      dotenv.env['BASE_URL'] ?? 'http://192.168.100.104:3000/api';
   final storage = const FlutterSecureStorage();
 
   // Obtener todas las audiencias de un usuario específico

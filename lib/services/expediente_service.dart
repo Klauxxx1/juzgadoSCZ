@@ -6,8 +6,7 @@ import 'package:si2/models/expediente_model.dart';
 import 'package:si2/models/user_model.dart';
 
 class ExpedienteService {
-  final String baseUrl =
-      'https://juzgado-backend-production.up.railway.app/api';
+  final String baseUrl = 'https://192.168.100.104:3000/api';
   final storage = const FlutterSecureStorage();
 
   // ==================== MÉTODOS DE EXPEDIENTE ====================

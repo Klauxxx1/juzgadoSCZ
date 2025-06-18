@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:si2/models/AuthResponse_model.dart';
@@ -7,7 +8,8 @@ import 'package:flutter/foundation.dart'; // Para kDebugMode
 
 class ApiService {
   // URL del backend
-  final String baseUrl = 'http://192.168.100.63:3000/api';
+  final String baseUrl =
+      dotenv.env['BASE_URL'] ?? 'http://192.168.100.104:3000/api';
   final storage = const FlutterSecureStorage();
 
   // ==================== MÉTODOS DE AUTENTICACIÓN ====================

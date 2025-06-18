@@ -5,8 +5,7 @@ import 'package:flutter/foundation.dart'; // Para kDebugMode
 
 class ClienteService {
   // URL del backend
-  final String baseUrl =
-      'https://juzgado-backend-production.up.railway.app/api';
+  final String baseUrl = 'http://192.168.100.104:3000/api';
   final storage = const FlutterSecureStorage();
 
   // Actualizar datos de un cliente
